@@ -1,5 +1,12 @@
+## <small>0.1.3 (2019-01-06)</small>
+
+* Make preversion also build dist ([3b156f4](https://github.com/vantreeseba/gamepad-events/commit/3b156f4))
+
+
+
 ## <small>0.1.2 (2019-01-06)</small>
 
+* 0.1.2 ([8f509f9](https://github.com/vantreeseba/gamepad-events/commit/8f509f9))
 * Changing to version 0.1.0 ([9be219c](https://github.com/vantreeseba/gamepad-events/commit/9be219c))
 * Initial ([a027410](https://github.com/vantreeseba/gamepad-events/commit/a027410))
 * Initial commit for gamepad ([07c3ccc](https://github.com/vantreeseba/gamepad-events/commit/07c3ccc))
