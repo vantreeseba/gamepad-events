@@ -1,5 +1,12 @@
+## <small>0.1.4 (2019-01-06)</small>
+
+* Make dist be named index.js ([1847c02](https://github.com/vantreeseba/gamepad-events/commit/1847c02))
+
+
+
 ## <small>0.1.3 (2019-01-06)</small>
 
+* 0.1.3 ([3633403](https://github.com/vantreeseba/gamepad-events/commit/3633403))
 * Make preversion also build dist ([3b156f4](https://github.com/vantreeseba/gamepad-events/commit/3b156f4))
 
 
