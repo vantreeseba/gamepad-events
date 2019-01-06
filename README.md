@@ -8,8 +8,6 @@ A helper to manage gamepad inputs.
 
 * [GamePadManager](#GamePadManager)
     * [new GamePadManager([config])](#new_GamePadManager_new)
-    * [._startHold(player, button)](#GamePadManager+_startHold)
-    * [._clearHold(player, button)](#GamePadManager+_clearHold)
     * [.update()](#GamePadManager+update)
     * [.on(type, target, listener)](#GamePadManager+on)
     * [.off(type, target)](#GamePadManager+off)
@@ -31,30 +29,6 @@ Constructor.
 | [config.longPressThreshold] | <code>Number</code> | The threshold to trigger longPress. |
 | [config.repeatThreshold] | <code>Number</code> | The threshold to trigger longPress. |
 | [config.repeatRate] | <code>Number</code> | The threshold to trigger longPress. |
-
-<a name="GamePadManager+_startHold"></a>
-
-### gamePadManager._startHold(player, button)
-Set the current hold state for a players button.
-
-**Kind**: instance method of [<code>GamePadManager</code>](#GamePadManager)  
-
-| Param | Type | Description |
-| --- | --- | --- |
-| player | <code>Number</code> | The gamepad that triggered the event. |
-| button | <code>Number</code> | The Index of the button to be marked as long press. |
-
-<a name="GamePadManager+_clearHold"></a>
-
-### gamePadManager._clearHold(player, button)
-Clear the current hold state for a players button.
-
-**Kind**: instance method of [<code>GamePadManager</code>](#GamePadManager)  
-
-| Param | Type | Description |
-| --- | --- | --- |
-| player | <code>Number</code> | The gamepad that triggered the event. |
-| button | <code>Number</code> | The Index of the button to be cleared. |
 
 <a name="GamePadManager+update"></a>
 
