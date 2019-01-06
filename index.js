@@ -132,6 +132,7 @@ class GamePadManager {
 
   /**
    * Set the current hold state for a players button.
+   * @private
    * @param {Number} player The gamepad that triggered the event.
    * @param {Number} button The Index of the button to be marked as long press.
    */
@@ -153,6 +154,7 @@ class GamePadManager {
 
   /**
    * Clear the current hold state for a players button.
+   * @private
    * @param {Number} player The gamepad that triggered the event.
    * @param {Number} button The Index of the button to be cleared.
    */
