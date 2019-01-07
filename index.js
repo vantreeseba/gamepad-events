@@ -1,7 +1,9 @@
+const EventEmitter = require('eventemitter3');
+
 /**
  * A helper to manage gamepad inputs.
  */
-class GamePadManager {
+class GamePadManager extends EventEmitter {
   /**
    * Constructor.
    * @param {Object} [config] The configuration object.
@@ -11,8 +13,10 @@ class GamePadManager {
    * @param {Number} [config.repeatRate] The threshold to trigger longPress.
    */
   constructor(config = {}) {
+    super();
+
     this.states = {};
-    this.listeners = {};
+    this.buttonThreshold = config.buttonThreshold || 0.1;
     this.axisThreshold = config.axisThreshold || 0.1;
     this.longPressThreshold = config.longPressThreshold || 300;
     this.repeatThreshold = config.repeatThreshold || 300;
@@ -55,78 +59,78 @@ class GamePadManager {
   _setupButtonMappings() {
     this.mappings = {
       // PS4 Buttons.
-      ps4_x: {type: 'button', value: 0},
-      ps4_circle: {type: 'button', value: 1},
-      ps4_square: {type: 'button', value: 2},
-      ps4_triangle: {type: 'button', value: 3},
-      ps4_l1: {type: 'button', value: 4},
-      ps4_r1: {type: 'button', value: 5},
-      ps4_l2: {type: 'button', value: 6},
-      ps4_r2: {type: 'button', value: 7},
-      ps4_share: {type: 'button', value: 8},
-      ps4_options: {type: 'button', value: 9},
-      ps4_left_stick_in: {type: 'button', value: 10},
-      ps4_right_stick_in: {type: 'button', value: 11},
-      ps4_dpad_up: {type: 'button', value: 12},
-      ps4_dpad_down: {type: 'button', value: 13},
-      ps4_dpad_left: {type: 'button', value: 14},
-      ps4_dpad_right: {type: 'button', value: 15},
-      ps4_ps: {type: 'button', value: 16},
+      ps4_x: {type: 'button', index: 0},
+      ps4_circle: {type: 'button', index: 1},
+      ps4_square: {type: 'button', index: 2},
+      ps4_triangle: {type: 'button', index: 3},
+      ps4_l1: {type: 'button', index: 4},
+      ps4_r1: {type: 'button', index: 5},
+      ps4_l2: {type: 'button', index: 6},
+      ps4_r2: {type: 'button', index: 7},
+      ps4_share: {type: 'button', index: 8},
+      ps4_options: {type: 'button', index: 9},
+      ps4_left_stick_in: {type: 'button', index: 10},
+      ps4_right_stick_in: {type: 'button', index: 11},
+      ps4_dpad_up: {type: 'button', index: 12},
+      ps4_dpad_down: {type: 'button', index: 13},
+      ps4_dpad_left: {type: 'button', index: 14},
+      ps4_dpad_right: {type: 'button', index: 15},
+      ps4_ps: {type: 'button', index: 16},
 
       // PS4 Axes.
-      ps4_left_stick_x: {type: 'axis', value: 0},
-      ps4_left_stick_y: {type: 'axis', value: 1},
-      ps4_right_stick_x: {type: 'axis', value: 2},
-      ps4_right_stick_y: {type: 'axis', value: 3},
+      ps4_left_stick_x: {type: 'axis', index: 0},
+      ps4_left_stick_y: {type: 'axis', index: 1},
+      ps4_right_stick_x: {type: 'axis', index: 2},
+      ps4_right_stick_y: {type: 'axis', index: 3},
 
       // Xbox Buttons.
-      xbox_a: {type: 'button', value: 0},
-      xbox_b: {type: 'button', value: 1},
-      xbox_x: {type: 'button', value: 2},
-      xbox_y: {type: 'button', value: 3},
-      xbox_lb: {type: 'button', value: 4},
-      xbox_rb: {type: 'button', value: 5},
-      xbox_lt: {type: 'button', value: 6},
-      xbox_rt: {type: 'button', value: 7},
-      xbox_back: {type: 'button', value: 8},
-      xbox_start: {type: 'button', value: 9},
-      xbox_left_stick_in: {type: 'button', value: 10},
-      xbox_right_stick_in: {type: 'button', value: 11},
-      xbox_dpad_up: {type: 'button', value: 12},
-      xbox_dpad_down: {type: 'button', value: 13},
-      xbox_dpad_left: {type: 'button', value: 14},
-      xbox_dpad_right: {type: 'button', value: 15},
+      xbox_a: {type: 'button', index: 0},
+      xbox_b: {type: 'button', index: 1},
+      xbox_x: {type: 'button', index: 2},
+      xbox_y: {type: 'button', index: 3},
+      xbox_lb: {type: 'button', index: 4},
+      xbox_rb: {type: 'button', index: 5},
+      xbox_lt: {type: 'button', index: 6},
+      xbox_rt: {type: 'button', index: 7},
+      xbox_back: {type: 'button', index: 8},
+      xbox_start: {type: 'button', index: 9},
+      xbox_left_stick_in: {type: 'button', index: 10},
+      xbox_right_stick_in: {type: 'button', index: 11},
+      xbox_dpad_up: {type: 'button', index: 12},
+      xbox_dpad_down: {type: 'button', index: 13},
+      xbox_dpad_left: {type: 'button', index: 14},
+      xbox_dpad_right: {type: 'button', index: 15},
 
       // XBox Axes.
-      xbox_left_stick_x: {type: 'axis', value: 0},
-      xbox_left_stick_y: {type: 'axis', value: 1},
-      xbox_right_stick_x: {type: 'axis', value: 2},
-      xbox_right_stick_y: {type: 'axis', value: 3},
+      xbox_left_stick_x: {type: 'axis', index: 0},
+      xbox_left_stick_y: {type: 'axis', index: 1},
+      xbox_right_stick_x: {type: 'axis', index: 2},
+      xbox_right_stick_y: {type: 'axis', index: 3},
 
       // Generic Button Mappings
-      rc_bottom: {type: 'button', value: 0},
-      rc_right: {type: 'button', value: 1},
-      rc_left: {type: 'button', value: 2},
-      rc_top: {type: 'button', value: 3},
-      l1: {type: 'button', value: 4},
-      r1: {type: 'button', value: 5},
-      l2: {type: 'button', value: 6},
-      r2: {type: 'button', value: 7},
-      center_left: {type: 'button', value: 8},
-      center_right: {type: 'button', value: 9},
-      left_stick_in: {type: 'button', value: 10},
-      right_stick_in: {type: 'button', value: 11},
-      dpad_up: {type: 'button', value: 12},
-      dpad_down: {type: 'button', value: 13},
-      dpad_left: {type: 'button', value: 14},
-      dpad_right: {type: 'button', value: 15},
-      center_center: {type: 'button', value: 16},
+      rc_bottom: {type: 'button', index: 0},
+      rc_right: {type: 'button', index: 1},
+      rc_left: {type: 'button', index: 2},
+      rc_top: {type: 'button', index: 3},
+      l1: {type: 'button', index: 4},
+      r1: {type: 'button', index: 5},
+      l2: {type: 'button', index: 6},
+      r2: {type: 'button', index: 7},
+      center_left: {type: 'button', index: 8},
+      center_right: {type: 'button', index: 9},
+      left_stick_in: {type: 'button', index: 10},
+      right_stick_in: {type: 'button', index: 11},
+      dpad_up: {type: 'button', index: 12},
+      dpad_down: {type: 'button', index: 13},
+      dpad_left: {type: 'button', index: 14},
+      dpad_right: {type: 'button', index: 15},
+      center_center: {type: 'button', index: 16},
 
       // Generic Axis Mappings
-      left_stick_x: {type: 'axis', value: 0},
-      left_stick_y: {type: 'axis', value: 1},
-      right_stick_x: {type: 'axis', value: 2},
-      right_stick_y: {type: 'axis', value: 3},
+      left_stick_x: {type: 'axis', index: 0},
+      left_stick_y: {type: 'axis', index: 1},
+      right_stick_x: {type: 'axis', index: 2},
+      right_stick_y: {type: 'axis', index: 3},
     };
   }
 
@@ -168,33 +172,33 @@ class GamePadManager {
    * @private
    * @param {String} event Type of event.
    * @param {Number} player The gamepad that triggered the event.
-   * @param {Number} button The index of the button that triggered the event.
+   * @param {Number} bIndex The index of the button that triggered the event.
    * @param {Number} value Value of the button press (this can be a between 0,1 for triggers).
    */
-  _onButtonEvent(event, player, button, value) {
-    const b = `button_${button}`;
-    if (this.listeners[b] && this.listeners[b][event]) {
-      this.listeners[b][event]({event, player, button, value});
-    }
+  _onButtonEvent(event, player, bIndex, value) {
+    const button = `button_${bIndex}`;
+
+    this.emit(event, {player, button, value});
+    this.emit(`${event}:${button}`, {player, button, value});
 
     switch (event) {
       case 'down':
-        this.delta[player][b] = true;
+        this.delta[player][button] = true;
         break;
       case 'hold':
-        delete this.delta[player][b];
-        this._startHold(player, b);
+        delete this.delta[player][button];
+        this._startHold(player, button);
         break;
       case 'up':
-        this.delta[player][b] = false;
-        this._clearHold(player, b);
+        this.delta[player][button] = false;
+        this._clearHold(player, button);
         break;
       case 'longPress':
-        this.longPress[player][b].fired = true;
+        this.longPress[player][button].fired = true;
         break;
       case 'repeat':
-        this.repeat[player][b].fired = true;
-        this.repeat[player][b].start = Date.now();
+        this.repeat[player][button].fired = true;
+        this.repeat[player][button].start = Date.now();
         break;
       default: break;
     }
@@ -208,25 +212,28 @@ class GamePadManager {
    * @param {Number} axis The index of the axis that triggered the event.
    * @param {Number} value Value of the axis (this is between -1, 1).
    */
-  _onAxisEvent(event, player, axis, value) {
-    const a = `axis_${axis}`;
-    if (this.listeners[a] && this.listeners[a][event]) {
-      this.listeners[a][event]({event, player, axis, value});
-    }
+  _onAxisEvent(event, player, axisIndex, value) {
+    const axis = `axis_${axisIndex}`;
+
+    this.emit(event, {player, axis, value});
+    this.emit(`${event}:${axis}`, {player, axis, value});
 
     switch (event) {
       case 'down':
       case 'hold':
-        this._startHold(player, a);
-        this.delta[player][a] = value;
+        this._startHold(player, axis);
+        this.delta[player][axis] = value;
         break;
       case 'up':
-        this.delta[player][a] = 0;
-        this._clearHold(player, a);
+        this.delta[player][axis] = 0;
+        this._clearHold(player, axis);
+        break;
+      case 'longPress':
+        this.longPress[player][axis].fired = true;
         break;
       case 'repeat':
-        this.repeat[player][a].fired = true;
-        this.repeat[player][a].start = Date.now();
+        this.repeat[player][axis].fired = true;
+        this.repeat[player][axis].start = Date.now();
         break;
       default: break;
     }
@@ -325,57 +332,35 @@ class GamePadManager {
   }
 
   /**
-   * Set an event listender for a button or axis event.
-   * @param {String} type The type of event to listen for.
-   * @param {String} target The button or axis to listen to events for.
-   * @param {Function} listener Called with event data when the event occurs.
-   */
-  on(type, target, listener) {
-    if (this.mappings[target]) {
-      target = `${this.mappings[target].type}_${this.mappings[target].value}`;
-    }
-
-    if (!this.listeners[target]) {
-      this.listeners[target] = {};
-    }
-
-    this.listeners[target][type] = listener;
-  }
-
-  /**
-   * Remove the event listener from the button or axis.
-   * @param {String} type The type of event to remove the listener for.
-   * @param {String} target The button or axis to remove the listener for.
-   */
-  off(type, target) {
-    if (this.mappings[target]) {
-      target = `${this.mappings[target].type}_${this.mappings[target].value}`;
-    }
-
-    if (!this.listeners[target] || !this.listeners[target][type]) {
-      return;
-    }
-
-    this.listeners[target][type] = null;
-  }
-
-  /**
    * Check if a button is pressed or held.
    * @param {String} target The button to check if is down.
    * @param {Number} [player=-1] The gamepad to check, if -1, all are checked.
    * @return {Boolean} IsDown If the button is pressed or held.
    */
   isDown(target, player = -1) {
-    let buttonId = -1;
+    let mapped;
 
     if (this.mappings[target]) {
-      buttonId = this.mappings[target].value;
+      mapped = this.mappings[target];
     }
 
-    if (buttonId === -1) {
-      return false;
+    if (!mapped) {
+      return 0;
     }
 
+    return mapped.type === 'button' ?
+      this._isButtonDown(mapped.index, player):
+      this._isAxisDown(mapped.index, player);
+
+  }
+
+  /**
+   * Gets the current value of a button.
+   * @param {number} buttonId The index of the button.
+   * @param {number} [player=-1] The player index.
+   * @return {number} The value of the button.
+   */
+  _isButtonDown(buttonId, player = -1) {
     if (player !== -1) {
       return this.states[player].buttons.length && this.states[player].buttons[buttonId] > 0;
     }
@@ -383,39 +368,31 @@ class GamePadManager {
     for (let i = 0; i < 4; i += 1) {
       if (this.states[i]
         && this.states[i].buttons.length
-        && this.states[i].buttons[buttonId] !== 0) {
-        return true;
+        && this.states[i].buttons[buttonId] >= this.buttonThreshold) {
+        return this.states[i].buttons[buttonId];
       }
     }
 
-    return false;
+    return 0;
   }
 
   /**
-   * Returns a number representing if an axis has moved, 0 if not, (-1,0] or [0,1) otherwise.
-   * @param {String} target
-   * @param {Number} [player=-1]
+   * Gets the current value of an axis.
+   *
+   * @param {number} axisId The axis index.
+   * @param {number} [player=-1] The player index.
+   * @return {number} The value of the axis.
    */
-  isMoved(target, player = -1) {
-    let buttonId = -1;
-
-    if (this.mappings[target]) {
-      buttonId = this.mappings[target].value;
-    }
-
-    if (buttonId === -1) {
-      return 0;
-    }
-
+  _isAxisDown(axisId, player = -1) {
     if (player !== -1) {
-      return this.states[player].axes.length && this.states[player].axes[buttonId] > 0;
+      return this.states[player].axes.length && this.states[player].axes[axisId] > 0;
     }
 
     for (let i = 0; i < 4; i += 1) {
       if (this.states[i] && this.states[i].axes.length
-        && (this.states[i].axes[buttonId] > this.axisThreshold
-        || this.states[i].axes[buttonId] < -this.axisThreshold)) {
-        return this.states[i].axes[buttonId];
+        && (this.states[i].axes[axisId] > this.axisThreshold
+        || this.states[i].axes[axisId] < -this.axisThreshold)) {
+        return this.states[i].axes[axisId];
       }
     }
 
