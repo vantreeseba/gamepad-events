@@ -1,5 +1,13 @@
+## <small>0.1.5 (2019-01-08)</small>
+
+* Get started on testing ([40ea352](https://github.com/vantreeseba/gamepad-events/commit/40ea352))
+* Get to 100% coverage ([d76cc1d](https://github.com/vantreeseba/gamepad-events/commit/d76cc1d))
+
+
+
 ## <small>0.1.4 (2019-01-06)</small>
 
+* 0.1.4 ([d49c54e](https://github.com/vantreeseba/gamepad-events/commit/d49c54e))
 * Make dist be named index.js ([1847c02](https://github.com/vantreeseba/gamepad-events/commit/1847c02))
 
 
