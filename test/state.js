@@ -13,48 +13,137 @@ module.exports = {
 
       assert.isOk(gp);
     },
-    'when gamepad button state is down is down should return true': () => {
-      var gp = new Gamepad();
-      var pad = global.navigator.getGamepads()[0];
+    isDown: {
+      'should return true when gamepad button state is down is down': () => {
+        var gp = new Gamepad();
+        var pad = global.navigator.getGamepads()[0];
 
-      gp.update();
-      pad.buttons[0].value = 1;
-      gp.update();
-      var isDown = gp.isDown('ps4_x');
+        gp.update();
+        pad.buttons[0].value = 1;
+        gp.update();
+        var isDown = gp.isDown('ps4_x');
 
-      assert.isOk(isDown);
+        assert.isOk(isDown);
+      },
+      'should return false when gamepad button state is up': () => {
+        var gp = new Gamepad();
+        var pad = global.navigator.getGamepads()[0];
+
+        pad.buttons[0].value = 0;
+        gp.update();
+        var isDown = gp.isDown('ps4_x');
+
+        assert.isNotOk(isDown);
+      },
+      'should return false when button mapping does not exist': () => {
+        var gp = new Gamepad();
+        var pad = global.navigator.getGamepads()[0];
+
+        pad.buttons[0].value = 1;
+        gp.update();
+        var isDown = gp.isDown('bananaphone_x');
+
+        assert.isNotOk(isDown);
+      },
+      'should return true when player exists and gamepad state is down': () => {
+        var gp = new Gamepad();
+        var pad = global.navigator.getGamepads()[0];
+
+        gp.update();
+        pad.buttons[0].value = 1;
+        gp.update();
+        var isDown = gp.isDown('ps4_x', 0);
+
+        assert.isOk(isDown);
+      },
+      'should return false when player exists and gamepad state is up': () => {
+        var gp = new Gamepad();
+        var pad = global.navigator.getGamepads()[0];
+
+        pad.buttons[0].value = 1;
+        gp.update();
+        pad.buttons[0].value = 0;
+        gp.update();
+        var isDown = gp.isDown('ps4_x', 0);
+
+        assert.isNotOk(isDown);
+      },
+      'should return false when player does not exist': () => {
+        var gp = new Gamepad();
+        var pad = global.navigator.getGamepads()[0];
+
+        pad.buttons[0].value = 1;
+        gp.update();
+        var isDown = gp.isDown('ps4_x', 2);
+
+        assert.isNotOk(isDown);
+      },
+      'should return true when gamepad axis state is down': () => {
+        var gp = new Gamepad();
+        var pad = global.navigator.getGamepads()[0];
+
+        gp.update();
+        pad.axes[0] = 0.5;
+        gp.update();
+        var isDown = gp.isDown('left_stick_x');
+
+        assert.isOk(isDown);
+      },
+      'should return false when gamepad axis state is up': () => {
+        var gp = new Gamepad();
+        var pad = global.navigator.getGamepads()[0];
+
+        pad.axes[0] = 1;
+        gp.update();
+        pad.axes[0] = 0;
+        gp.update();
+        var isDown = gp.isDown('left_stick_x');
+
+        assert.isNotOk(isDown);
+      },
+      'should return true when player does exist and gamepad axis state is down': () => {
+        var gp = new Gamepad();
+        var pad = global.navigator.getGamepads()[0];
+
+        pad.axes[0] = 1;
+        gp.update();
+        var isDown = gp.isDown('left_stick_x', 0);
+
+        assert.isOk(isDown);
+      },
+      'should return false when player does exist and gamepad axis state is up': () => {
+        var gp = new Gamepad();
+        var pad = global.navigator.getGamepads()[0];
+
+        pad.axes[0] = 0;
+        gp.update();
+        var isDown = gp.isDown('left_stick_x', 0);
+
+        assert.isNotOk(isDown);
+      },
+      'should return false when player does not exist': () => {
+        var gp = new Gamepad();
+        var pad = global.navigator.getGamepads()[0];
+
+        pad.axes[0] = 0;
+        gp.update();
+        var isDown = gp.isDown('left_stick_x', 2);
+
+        assert.isNotOk(isDown);
+      }
     },
-    'when gamepad button state is up isDown should return false': () => {
-      var gp = new Gamepad();
-      var pad = global.navigator.getGamepads()[0];
+    getStick: {
+      'should return current state of stick': () => {
+        var gp = new Gamepad();
+        var pad = global.navigator.getGamepads()[0];
 
-      pad.buttons[0].value = 0;
-      gp.update();
-      var isDown = gp.isDown('ps4_x');
+        pad.axes[0] = 1;
+        gp.update();
+        var xy = gp.getStick('left_stick');
 
-      assert.isNotOk(isDown);
-    },
-    'when gamepad axis state is down is down should return true': () => {
-      var gp = new Gamepad();
-      var pad = global.navigator.getGamepads()[0];
-
-      gp.update();
-      pad.axes[0] = 0.5;
-      gp.update();
-      var isDown = gp.isDown('left_stick_x');
-
-      assert.isOk(isDown);
-    },
-    'when gamepad axis state is up isDown should return false': () => {
-      var gp = new Gamepad();
-      var pad = global.navigator.getGamepads()[0];
-
-      pad.axes[0] = 0;
-      gp.update();
-      var isDown = gp.isDown('left_stick_x');
-
-      assert.isNotOk(isDown);
-    },
-
+        assert.equal(xy.x, 1);
+        assert.equal(xy.y, 0);
+      }
+    }
   }
 };

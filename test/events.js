@@ -13,57 +13,172 @@ module.exports = {
 
       assert.isOk(gp);
     },
-    'when gamepad button state is change it should emit an event.': () => {
-      var gp = new Gamepad();
-      var pad = global.navigator.getGamepads()[0];
-      var fired = false;
+    down: {
+      'should emit an event when gamepad button state changes.': () => {
+        var gp = new Gamepad();
+        var pad = global.navigator.getGamepads()[0];
+        var fired = false;
 
-      gp.on('down', () => fired = true, this);
-      gp.update();
-      pad.buttons[0].value = 1;
-      gp.update();
+        gp.on('down', () => fired = true, this);
+        gp.update();
+        pad.buttons[0].value = 1;
+        gp.update();
 
-      assert.isTrue(fired);
+        assert.isTrue(fired);
+      },
+      'should emit more specific event when button state changes': () => {
+        var gp = new Gamepad();
+        var pad = global.navigator.getGamepads()[0];
+        var fired1 = false;
+        var fired2 = false;
+
+        gp.on('down:button_0', () => fired1 = true, this);
+        gp.on('down:button_1', () => fired2 = true, this);
+        gp.update();
+        pad.buttons[0].value = 1;
+        gp.update();
+
+        assert.isTrue(fired1);
+        assert.isFalse(fired2);
+      },
+      'should emit an event when axis state changes': () => {
+        var gp = new Gamepad();
+        var pad = global.navigator.getGamepads()[0];
+        var fired = false;
+
+        gp.on('down', () => fired = true, this);
+        gp.update();
+        pad.axes[0] = 1;
+        gp.update();
+
+        assert.isTrue(fired);
+      },
+      'should emit a more specific event when axis state changes': () => {
+        var gp = new Gamepad();
+        var pad = global.navigator.getGamepads()[0];
+        var fired = false;
+
+        gp.on('down:axis_0', () => fired = true, this);
+        gp.update();
+        pad.axes[0] = 1;
+        gp.update();
+
+        assert.isTrue(fired);
+      },
     },
-    'when gamepad button state is change it should emit more specific events.': () => {
-      var gp = new Gamepad();
-      var pad = global.navigator.getGamepads()[0];
-      var fired1 = false;
-      var fired2 = false;
+    hold: {
+      'should be fired when button is held': (done) => {
+        var gp = new Gamepad();
+        var pad = global.navigator.getGamepads()[0];
+        var fired = false;
 
-      gp.on('down:button_0', () => fired1 = true, this);
-      gp.on('down:button_1', () => fired2 = true, this);
-      gp.update();
-      pad.buttons[0].value = 1;
-      gp.update();
+        gp.on('hold', () => fired = true, this);
 
-      assert.isTrue(fired1);
-      assert.isFalse(fired2);
+        const interval = setInterval(() => {
+          pad.buttons[0].value = 1;
+          gp.update();
+        }, 10);
+
+        setTimeout(() => {
+          clearInterval(interval);
+          assert.isTrue(fired);
+          done();
+        }, 200);
+      },
+      'should be fired when axis is held': (done) => {
+        var gp = new Gamepad();
+        var pad = global.navigator.getGamepads()[0];
+        var fired = false;
+
+        gp.on('hold', () => fired = true, this);
+
+        const interval = setInterval(() => {
+          pad.axes[0] = 1;
+          gp.update();
+        }, 10);
+
+        setTimeout(() => {
+          clearInterval(interval);
+          assert.isTrue(fired);
+          done();
+        }, 200);
+      }
     },
-    'when gamepad axis state is changed it should emit an event.': () => {
-      var gp = new Gamepad();
-      var pad = global.navigator.getGamepads()[0];
-      var fired = false;
+    repeat: {
+      'should be fired when button is held': (done) => {
+        var gp = new Gamepad({repeatThreshold: 50});
+        var pad = global.navigator.getGamepads()[0];
+        var fired = false;
 
-      gp.on('down', () => fired = true, this);
-      gp.update();
-      pad.axes[0] = 1;
-      gp.update();
+        gp.on('repeat', () => fired = true, this);
 
-      assert.isTrue(fired);
+        const interval = setInterval(() => {
+          pad.buttons[0].value = 1;
+          gp.update();
+        }, 10);
+
+        setTimeout(() => {
+          clearInterval(interval);
+          assert.isTrue(fired);
+          done();
+        }, 100);
+      },
+      'should be fired when axis is held': (done) => {
+        var gp = new Gamepad({repeatThreshold: 50});
+        var pad = global.navigator.getGamepads()[0];
+        var fired = false;
+
+        gp.on('repeat', () => fired = true, this);
+
+        const interval = setInterval(() => {
+          pad.axes[0] = 1;
+          gp.update();
+        }, 10);
+
+        setTimeout(() => {
+          clearInterval(interval);
+          assert.isTrue(fired);
+          done();
+        }, 100);
+      }
     },
-    'when gamepad axis state is changed it should emit a specific event.': () => {
-      var gp = new Gamepad();
-      var pad = global.navigator.getGamepads()[0];
-      var fired = false;
+    longpress: {
+      'should be fired when button is held': (done) => {
+        var gp = new Gamepad({longpressThreshold: 10});
+        var pad = global.navigator.getGamepads()[0];
+        var fired = false;
 
-      gp.on('down:axis_0', () => fired = true, this);
-      gp.update();
-      pad.axes[0] = 1;
-      gp.update();
+        gp.on('longpress', () => fired = true, this);
 
-      assert.isTrue(fired);
-    },
+        const interval = setInterval(() => {
+          pad.buttons[0].value = 1;
+          gp.update();
+        }, 10);
 
+        setTimeout(() => {
+          clearInterval(interval);
+          assert.isTrue(fired);
+          done();
+        }, 50);
+      },
+      'should be fired when axis is held': (done) => {
+        var gp = new Gamepad({longpressThreshold: 10});
+        var pad = global.navigator.getGamepads()[0];
+        var fired = false;
+
+        gp.on('longpress', () => fired = true, this);
+
+        const interval = setInterval(() => {
+          pad.axes[0] = 1;
+          gp.update();
+        }, 10);
+
+        setTimeout(() => {
+          clearInterval(interval);
+          assert.isTrue(fired);
+          done();
+        }, 50);
+      }
+    }
   }
 };

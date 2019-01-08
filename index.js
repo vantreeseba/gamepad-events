@@ -8,9 +8,9 @@ class GamePadManager extends EventEmitter {
    * Constructor.
    * @param {Object} [config] The configuration object.
    * @param {Number} [config.axisThreshold] The threshold to trigger axis events.
-   * @param {Number} [config.longPressThreshold] The threshold to trigger longPress.
-   * @param {Number} [config.repeatThreshold] The threshold to trigger longPress.
-   * @param {Number} [config.repeatRate] The threshold to trigger longPress.
+   * @param {Number} [config.longpressThreshold] The threshold to trigger longpress.
+   * @param {Number} [config.repeatThreshold] The threshold to trigger longpress.
+   * @param {Number} [config.repeatRate] The threshold to trigger longpress.
    */
   constructor(config = {}) {
     super();
@@ -18,7 +18,7 @@ class GamePadManager extends EventEmitter {
     this.states = {};
     this.buttonThreshold = config.buttonThreshold || 0.1;
     this.axisThreshold = config.axisThreshold || 0.1;
-    this.longPressThreshold = config.longPressThreshold || 300;
+    this.longpressThreshold = config.longpressThreshold || 300;
     this.repeatThreshold = config.repeatThreshold || 300;
     this.repeatRate = config.repeatRate || 100;
     this.delta = {
@@ -28,7 +28,7 @@ class GamePadManager extends EventEmitter {
       3: {},
     };
 
-    this.longPress = {
+    this.longpress = {
       0: {},
       1: {},
       2: {},
@@ -138,18 +138,18 @@ class GamePadManager extends EventEmitter {
    * Set the current hold state for a players button.
    * @private
    * @param {Number} player The gamepad that triggered the event.
-   * @param {Number} button The Index of the button to be marked as long press.
+   * @param {Number} index The Index of the button/axis to be marked as long press.
    */
-  _startHold(player, button) {
-    if (!this.longPress[player][button]) {
-      this.longPress[player][button] = {
+  _startHold(player, index) {
+    if (!this.longpress[player][index]) {
+      this.longpress[player][index] = {
         start: Date.now(),
         fired: false,
       };
     }
 
-    if (!this.repeat[player][button]) {
-      this.repeat[player][button] = {
+    if (!this.repeat[player][index]) {
+      this.repeat[player][index] = {
         start: Date.now(),
         fired: false,
       };
@@ -163,7 +163,7 @@ class GamePadManager extends EventEmitter {
    * @param {Number} button The Index of the button to be cleared.
    */
   _clearHold(player, button) {
-    delete this.longPress[player][button];
+    delete this.longpress[player][button];
     delete this.repeat[player][button];
   }
 
@@ -193,14 +193,13 @@ class GamePadManager extends EventEmitter {
         this.delta[player][button] = false;
         this._clearHold(player, button);
         break;
-      case 'longPress':
-        this.longPress[player][button].fired = true;
+      case 'longpress':
+        this.longpress[player][button].fired = true;
         break;
       case 'repeat':
         this.repeat[player][button].fired = true;
         this.repeat[player][button].start = Date.now();
         break;
-      default: break;
     }
   }
 
@@ -228,14 +227,13 @@ class GamePadManager extends EventEmitter {
         this.delta[player][axis] = 0;
         this._clearHold(player, axis);
         break;
-      case 'longPress':
-        this.longPress[player][axis].fired = true;
+      case 'longpress':
+        this.longpress[player][axis].fired = true;
         break;
       case 'repeat':
         this.repeat[player][axis].fired = true;
         this.repeat[player][axis].start = Date.now();
         break;
-      default: break;
     }
   }
 
@@ -248,6 +246,89 @@ class GamePadManager extends EventEmitter {
     this.states[gamepad.index] = this.states[gamepad.index] || {};
     this.states[gamepad.index].axes = gamepad.axes.map(a => a);
     this.states[gamepad.index].buttons = gamepad.buttons.map(a => a.value);
+  }
+
+  /**
+   * Update the buttons state.
+   * @private
+   * @param {Number} player The index of the controller.
+   * @param {Object} controller The controller.
+   * @param {Number} button The index of the button to update.
+   */
+  _updateButtons(player, controller, button) {
+    const curVal = controller.buttons[button].value;
+    const prevVal = this.states[player].buttons[button];
+
+    if (curVal !== 0 && prevVal === 0) {
+      this._onButtonEvent('down', player, button, curVal);
+    }
+
+    if (curVal !== 0 && prevVal !== 0) {
+      this._onButtonEvent('hold', player, button, curVal);
+      const b = `button_${button}`;
+
+      const lp = this.longpress[player][b];
+      if (lp && Date.now() - lp.start > this.longpressThreshold && !lp.fired) {
+        this._onButtonEvent('longpress', player, button, curVal);
+      }
+
+      const r = this.repeat[player][b];
+      const startRepeat = r && !r.fired && Date.now() - r.start > this.repeatThreshold;
+      const repeat = r && r.fired && Date.now() - r.start > this.repeatRate;
+      if (startRepeat || repeat) {
+        this._onButtonEvent('repeat', player, button, curVal);
+      }
+    }
+
+    if (curVal === 0 && prevVal !== 0) {
+      this._onButtonEvent('up', player, button, curVal);
+    }
+
+    if (curVal === 0 && prevVal === 0) {
+      delete this.delta[player][`button_${button}`];
+    }
+  }
+
+  /**
+   * Update the axes state.
+   * @private
+   * @param {Number} player The index of the controller.
+   * @param {Object} controller The controller.
+   * @param {Number} axis The index of the axis to update.
+   */
+  _updateAxes(player, controller, axis) {
+    const curVal = controller.axes[axis];
+    const prevVal = this.states[player].axes[axis];
+    const pressed = Math.abs(curVal) >= this.axisThreshold;
+    const wasPressed = Math.abs(prevVal) >= this.axisThreshold;
+
+    if (pressed) {
+      if (!wasPressed) {
+        this._onAxisEvent('down', player, axis, curVal);
+      } else {
+        this._onAxisEvent('hold', player, axis, curVal);
+        const a = `axis_${axis}`;
+
+        const lp = this.longpress[player][a];
+        if (lp && Date.now() - lp.start > this.longpressThreshold && !lp.fired) {
+          this._onAxisEvent('longpress', player, axis, curVal);
+        }
+
+        const r = this.repeat[player][a];
+        const startRepeat = r && !r.fired && Date.now() - r.start > this.repeatThreshold;
+        const repeat = r && r.fired && Date.now() - r.start > this.repeatRate;
+        if (startRepeat || repeat) {
+          this._onAxisEvent('repeat', player, axis, curVal);
+        }
+      }
+    } else if (wasPressed) {
+      this._onAxisEvent('up', player, axis, curVal);
+    }
+
+    if (this.delta[player][`axis_${axis}`] === 0) {
+      delete this.delta[player][`axis_${axis}`];
+    }
+
   }
 
   /**
@@ -265,66 +346,11 @@ class GamePadManager extends EventEmitter {
       }
 
       for (let button = 0; button < controller.buttons.length; button += 1) {
-        const curVal = controller.buttons[button].value;
-        const prevVal = this.states[player].buttons[button];
-
-        if (curVal !== 0 && prevVal === 0) {
-          this._onButtonEvent('down', player, button, curVal);
-        }
-
-        if (curVal !== 0 && prevVal !== 0) {
-          this._onButtonEvent('hold', player, button, curVal);
-          const b = `button_${button}`;
-
-          const lp = this.longPress[player][b];
-          if (lp && Date.now() - lp.start > this.longPressThreshold && !lp.fired) {
-            this._onButtonEvent('longPress', player, button, curVal);
-          }
-
-          const r = this.repeat[player][b];
-          const startRepeat = r && !r.fired && Date.now() - r.start > this.repeatThreshold;
-          const repeat = r && r.fired && Date.now() - r.start > this.repeatRate;
-          if (startRepeat || repeat) {
-            this._onButtonEvent('repeat', player, button, curVal);
-          }
-        }
-
-        if (curVal === 0 && prevVal !== 0) {
-          this._onButtonEvent('up', player, button, curVal);
-        }
-
-        if (curVal === 0 && prevVal === 0) {
-          delete this.delta[player][`button_${button}`];
-        }
+        this._updateButtons(player, controller, button);
       }
 
       for (let axis = 0; axis < controller.axes.length; axis += 1) {
-        const curVal = controller.axes[axis];
-        const prevVal = this.states[player].axes[axis];
-        const pressed = Math.abs(curVal) >= this.axisThreshold;
-        const wasPressed = Math.abs(prevVal) >= this.axisThreshold;
-
-        if (pressed) {
-          if (!wasPressed) {
-            this._onAxisEvent('down', player, axis, curVal);
-          } else {
-            this._onAxisEvent('hold', player, axis, curVal);
-            const a = `axis_${axis}`;
-
-            const r = this.repeat[player][a];
-            const startRepeat = r && !r.fired && Date.now() - r.start > this.repeatThreshold;
-            const repeat = r && r.fired && Date.now() - r.start > this.repeatRate;
-            if (startRepeat || repeat) {
-              this._onAxisEvent('repeat', player, axis, curVal);
-            }
-          }
-        } else if (wasPressed) {
-          this._onAxisEvent('up', player, axis, curVal);
-        }
-
-        if (this.delta[player][`axis_${axis}`] === 0) {
-          delete this.delta[player][`axis_${axis}`];
-        }
+        this._updateAxes(player, controller, axis);
       }
 
       this._setState(controller);
@@ -356,11 +382,12 @@ class GamePadManager extends EventEmitter {
 
   /**
    * Gets the current value of a button.
+   * @private
    * @param {number} buttonId The index of the button.
-   * @param {number} [player=-1] The player index.
+   * @param {number} [player] The player index.
    * @return {number} The value of the button.
    */
-  _isButtonDown(buttonId, player = -1) {
+  _isButtonDown(buttonId, player) {
     if (player !== -1) {
       return this.states[player].buttons.length && this.states[player].buttons[buttonId] > 0;
     }
@@ -378,20 +405,25 @@ class GamePadManager extends EventEmitter {
 
   /**
    * Gets the current value of an axis.
-   *
+   * @private
    * @param {number} axisId The axis index.
-   * @param {number} [player=-1] The player index.
+   * @param {number} [player] The player index.
    * @return {number} The value of the axis.
    */
-  _isAxisDown(axisId, player = -1) {
+  _isAxisDown(axisId, player) {
     if (player !== -1) {
-      return this.states[player].axes.length && this.states[player].axes[axisId] > 0;
+      if(this.states[player] &&
+        this.states[player].axes.length &&
+        Math.abs(this.states[player].axes[axisId]) > this.axisThreshold) {
+        return this.states[player].axes[axisId];
+      }
     }
 
     for (let i = 0; i < 4; i += 1) {
-      if (this.states[i] && this.states[i].axes.length
-        && (this.states[i].axes[axisId] > this.axisThreshold
-        || this.states[i].axes[axisId] < -this.axisThreshold)) {
+      if (
+        this.states[i] &&
+        this.states[i].axes.length &&
+        Math.abs(this.states[i].axes[axisId]) > this.axisThreshold) {
         return this.states[i].axes[axisId];
       }
     }
@@ -407,8 +439,8 @@ class GamePadManager extends EventEmitter {
    */
   getStick(target, player = -1) {
     return {
-      x: this.isMoved(`${target}_x`, player),
-      y: this.isMoved(`${target}_y`, player),
+      x: this.isDown(`${target}_x`, player),
+      y: this.isDown(`${target}_y`, player),
     };
   }
 
@@ -417,19 +449,19 @@ class GamePadManager extends EventEmitter {
    * @param {Number} [player=-1] The gamepad to check for a delta, if -1, all are checked.
    * @return {Boolean} If there was a change since the last update in button/axis states.
    */
-  hasDelta(player = -1) {
-    if (player !== -1) {
-      return Object.keys(this.delta[player]).length > 0;
-    }
+  // hasDelta(player = -1) {
+  //   if (player !== -1) {
+  //     return Object.keys(this.delta[player]).length > 0;
+  //   }
 
-    for (let i = 0; i < 4; i += 1) {
-      if (Object.keys(this.delta[i]).length > 0) {
-        return true;
-      }
-    }
+  //   for (let i = 0; i < 4; i += 1) {
+  //     if (Object.keys(this.delta[i]).length > 0) {
+  //       return true;
+  //     }
+  //   }
 
-    return false;
-  }
+  //   return false;
+  // }
 }
 
 module.exports = GamePadManager;
