@@ -447,6 +447,30 @@ class GamePadManager extends EventEmitter {
       y: this.isDown(`${target}_y`, player),
     };
   }
+
+  /**
+   * Add an event listener.
+   * These are namespaced as well, so you can do down:axis_0 to get the specific axis event.
+   * @param {string} event The name of the event.
+   * @param {function} listener The name of the event.
+   * @param {object} context The context to be used as 'this' in the listener.
+   * @returns {EventEmitter}
+   */
+  on(...rest) {
+    return super.on(...rest);
+  }
+
+  /**
+   * Remove an event listener.
+   * These are namespaced as well, so you can do down:axis_0 to get the specific axis event.
+   * @param {string} event The name of the event.
+   * @param {function} listener The name of the event.
+   * @returns {EventEmitter}
+   */
+  off(...rest) {
+    return super.off(...rest);
+  }
+
 }
 
 module.exports = GamePadManager;
