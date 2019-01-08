@@ -1,5 +1,12 @@
+## <small>0.1.7 (2019-01-08)</small>
+
+* Cleanup ([42f1e0c](https://github.com/vantreeseba/gamepad-events/commit/42f1e0c))
+
+
+
 ## <small>0.1.6 (2019-01-08)</small>
 
+* 0.1.6 ([7679e0e](https://github.com/vantreeseba/gamepad-events/commit/7679e0e))
 * Add back in precommit testing hook ([0a8c79c](https://github.com/vantreeseba/gamepad-events/commit/0a8c79c))
 * Fix readme template ([0c03857](https://github.com/vantreeseba/gamepad-events/commit/0c03857))
 
