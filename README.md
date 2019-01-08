@@ -1,4 +1,3 @@
-# This is a template for node/js modules.
 <a name="GamePadManager"></a>
 
 ## GamePadManager
