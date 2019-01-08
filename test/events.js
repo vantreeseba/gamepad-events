@@ -106,7 +106,7 @@ module.exports = {
     },
     repeat: {
       'should be fired when button is held': (done) => {
-        var gp = new Gamepad({repeatThreshold: 50});
+        var gp = new Gamepad({repeatThreshold: 10});
         var pad = global.navigator.getGamepads()[0];
         var fired = false;
 
@@ -124,7 +124,7 @@ module.exports = {
         }, 100);
       },
       'should be fired when axis is held': (done) => {
-        var gp = new Gamepad({repeatThreshold: 50});
+        var gp = new Gamepad({repeatThreshold: 10});
         var pad = global.navigator.getGamepads()[0];
         var fired = false;
 

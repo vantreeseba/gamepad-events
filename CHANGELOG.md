@@ -1,5 +1,12 @@
+## <small>0.2.1 (2019-01-08)</small>
+
+* Add comments for inherited functions ([cccb1f2](https://github.com/vantreeseba/gamepad-events/commit/cccb1f2))
+
+
+
 ## 0.2.0 (2019-01-08)
 
+* 0.2.0 ([8032fb1](https://github.com/vantreeseba/gamepad-events/commit/8032fb1))
 * More cleanup, docs ([1df1452](https://github.com/vantreeseba/gamepad-events/commit/1df1452))
 
 
