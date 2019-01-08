@@ -22,7 +22,7 @@ Constructor.
 | Param | Type | Description |
 | --- | --- | --- |
 | [config] | <code>Object</code> | The configuration object. |
-| [config.buttonThreshold] | <code>Number</code> | The threshold to trigger button events. Usually used for triggers with variable amounts of down. |
+| [config.buttonThreshold] | <code>Number</code> | The threshold to trigger button events. Used for analog buttons / triggers with variable values and not binary ones. |
 | [config.axisThreshold] | <code>Number</code> | The threshold to trigger axis events. |
 | [config.longpressThreshold] | <code>Number</code> | The threshold to trigger longpress. |
 | [config.repeatThreshold] | <code>Number</code> | The threshold to trigger repeat. |

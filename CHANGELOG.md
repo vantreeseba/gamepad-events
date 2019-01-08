@@ -1,5 +1,12 @@
+## 0.2.0 (2019-01-08)
+
+* More cleanup, docs ([1df1452](https://github.com/vantreeseba/gamepad-events/commit/1df1452))
+
+
+
 ## <small>0.1.7 (2019-01-08)</small>
 
+* 0.1.7 ([7d95f9f](https://github.com/vantreeseba/gamepad-events/commit/7d95f9f))
 * Cleanup ([42f1e0c](https://github.com/vantreeseba/gamepad-events/commit/42f1e0c))
 
 
