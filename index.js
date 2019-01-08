@@ -2,6 +2,8 @@ const EventEmitter = require('eventemitter3');
 
 /**
  * A helper to manage gamepad inputs.
+ * @extends EventEmitter
+ * @see {@link https://github.com/primus/eventemitter3} eventemitter3
  */
 class GamePadManager extends EventEmitter {
   /**
@@ -360,7 +362,7 @@ class GamePadManager extends EventEmitter {
   /**
    * Check if a button is pressed or held.
    * @param {String} target The button to check if is down.
-   * @param {Number} [player=-1] The gamepad to check, if -1, all are checked.
+   * @param {Number} player=-1 The gamepad to check, if -1, all are checked.
    * @return {Boolean} IsDown If the button is pressed or held.
    */
   isDown(target, player = -1) {
@@ -434,7 +436,7 @@ class GamePadManager extends EventEmitter {
   /**
    * Get the state of a stick.
    * @param {String} target The stick name.
-   * @param {Number} [player] The index of the player to get.
+   * @param {Number} player=-1 The index of the player to get.
    * @return {Object} The x,y state of the stick.
    */
   getStick(target, player = -1) {
@@ -443,25 +445,6 @@ class GamePadManager extends EventEmitter {
       y: this.isDown(`${target}_y`, player),
     };
   }
-
-  /**
-   * Returns if the state of the buttons has changed since the last update.
-   * @param {Number} [player=-1] The gamepad to check for a delta, if -1, all are checked.
-   * @return {Boolean} If there was a change since the last update in button/axis states.
-   */
-  // hasDelta(player = -1) {
-  //   if (player !== -1) {
-  //     return Object.keys(this.delta[player]).length > 0;
-  //   }
-
-  //   for (let i = 0; i < 4; i += 1) {
-  //     if (Object.keys(this.delta[i]).length > 0) {
-  //       return true;
-  //     }
-  //   }
-
-  //   return false;
-  // }
 }
 
 module.exports = GamePadManager;
