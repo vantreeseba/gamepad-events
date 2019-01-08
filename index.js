@@ -9,10 +9,12 @@ class GamePadManager extends EventEmitter {
   /**
    * Constructor.
    * @param {Object} [config] The configuration object.
+   * @param {Number} [config.buttonThreshold] The threshold to trigger button events.
+   * Used for analog buttons / triggers with variable values and not binary ones.
    * @param {Number} [config.axisThreshold] The threshold to trigger axis events.
    * @param {Number} [config.longpressThreshold] The threshold to trigger longpress.
-   * @param {Number} [config.repeatThreshold] The threshold to trigger longpress.
-   * @param {Number} [config.repeatRate] The threshold to trigger longpress.
+   * @param {Number} [config.repeatThreshold] The threshold to trigger repeat.
+   * @param {Number} [config.repeatRate] The time between repeat events.
    */
   constructor(config = {}) {
     super();
@@ -261,11 +263,11 @@ class GamePadManager extends EventEmitter {
     const curVal = controller.buttons[button].value;
     const prevVal = this.states[player].buttons[button];
 
-    if (curVal !== 0 && prevVal === 0) {
+    if (curVal > this.buttonThreshold && prevVal <= this.buttonThreshold) {
       this._onButtonEvent('down', player, button, curVal);
     }
 
-    if (curVal !== 0 && prevVal !== 0) {
+    if (curVal > this.buttonThreshold && prevVal > this.buttonThreshold) {
       this._onButtonEvent('hold', player, button, curVal);
       const b = `button_${button}`;
 
@@ -282,11 +284,11 @@ class GamePadManager extends EventEmitter {
       }
     }
 
-    if (curVal === 0 && prevVal !== 0) {
+    if (curVal <= this.buttonThreshold && prevVal > this.buttonThreshold) {
       this._onButtonEvent('up', player, button, curVal);
     }
 
-    if (curVal === 0 && prevVal === 0) {
+    if (curVal <= this.buttonThreshold && prevVal <= this.buttonThreshold) {
       delete this.delta[player][`button_${button}`];
     }
   }
