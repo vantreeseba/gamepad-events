@@ -1,6 +1,6 @@
 {
   "name": "gamepad-events",
-  "version": "0.1.5",
+  "version": "0.1.6",
   "description": "",
   "main": "index.js",
   "browser": "dist/index.js",
@@ -38,7 +38,7 @@
     "build-dist": "webpack",
     "build-readme": "jsdoc2md -t README.hbs -f *.js > README.md",
     "build-changelog": "conventional-changelog -i CHANGELOG.md -s -r 0",
-    "precommit" : "npm run test",
+    "precommit": "npm run test",
     "version": "npm run build-dist && npm run build-readme && git add README.md && npm run build-changelog && git add CHANGELOG.md",
     "postversion": "git push && git push --tags"
   },

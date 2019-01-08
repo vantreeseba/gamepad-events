@@ -1,5 +1,13 @@
+## <small>0.1.6 (2019-01-08)</small>
+
+* Add back in precommit testing hook ([0a8c79c](https://github.com/vantreeseba/gamepad-events/commit/0a8c79c))
+* Fix readme template ([0c03857](https://github.com/vantreeseba/gamepad-events/commit/0c03857))
+
+
+
 ## <small>0.1.5 (2019-01-08)</small>
 
+* 0.1.5 ([079b9a3](https://github.com/vantreeseba/gamepad-events/commit/079b9a3))
 * Get started on testing ([40ea352](https://github.com/vantreeseba/gamepad-events/commit/40ea352))
 * Get to 100% coverage ([d76cc1d](https://github.com/vantreeseba/gamepad-events/commit/d76cc1d))
 
