@@ -1,5 +1,11 @@
+## <small>0.2.4 (2019-01-15)</small>
+
+
+
+
 ## <small>0.2.3 (2019-01-15)</small>
 
+* 0.2.3 ([13b27c9](https://github.com/vantreeseba/gamepad-events/commit/13b27c9))
 * Update main.workflow ([d0becc6](https://github.com/vantreeseba/gamepad-events/commit/d0becc6))
 
 
