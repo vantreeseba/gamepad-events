@@ -1,5 +1,12 @@
+## <small>0.2.3 (2019-01-15)</small>
+
+* Update main.workflow ([d0becc6](https://github.com/vantreeseba/gamepad-events/commit/d0becc6))
+
+
+
 ## <small>0.2.2 (2019-01-08)</small>
 
+* 0.2.2 ([a88ebe3](https://github.com/vantreeseba/gamepad-events/commit/a88ebe3))
 * Add comments for inherited functions ([cccb1f2](https://github.com/vantreeseba/gamepad-events/commit/cccb1f2))
 * Fix test ([0fe6ee4](https://github.com/vantreeseba/gamepad-events/commit/0fe6ee4))
 
