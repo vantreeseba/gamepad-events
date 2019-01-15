@@ -1,5 +1,5 @@
 workflow "New workflow" {
-  on = "push"
+  on = "release"
   resolves = ["npm-publish"]
 }
 
