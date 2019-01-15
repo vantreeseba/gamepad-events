@@ -1,5 +1,12 @@
+## <small>0.2.5 (2019-01-15)</small>
+
+
+
+
 ## <small>0.2.4 (2019-01-15)</small>
 
+* 0.2.4 ([417c831](https://github.com/vantreeseba/gamepad-events/commit/417c831))
+* test workflow on tag ([29f30e9](https://github.com/vantreeseba/gamepad-events/commit/29f30e9))
 
 
 
