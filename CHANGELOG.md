@@ -1,5 +1,12 @@
+## 0.3.0 (2019-01-17)
+
+* Cleanup github stuff, fix issue with buttondown ([153bbe4](https://github.com/vantreeseba/gamepad-events/commit/153bbe4))
+
+
+
 ## <small>0.2.5 (2019-01-15)</small>
 
+* 0.2.5 ([53f9cd1](https://github.com/vantreeseba/gamepad-events/commit/53f9cd1))
 
 
 
