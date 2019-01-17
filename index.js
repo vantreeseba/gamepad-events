@@ -393,7 +393,11 @@ class GamePadManager extends EventEmitter {
    */
   _isButtonDown(buttonId, player) {
     if (player !== -1) {
-      return this.states[player].buttons.length && this.states[player].buttons[buttonId] > 0;
+      if (this.states[player]
+        && this.states[player].buttons.length
+        && this.states[player].buttons[buttonId] >= this.buttonThreshold) {
+        return this.states[player].buttons[buttonId];
+      }
     }
 
     for (let i = 0; i < 4; i += 1) {
