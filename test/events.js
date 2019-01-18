@@ -26,6 +26,50 @@ module.exports = {
 
         assert.isTrue(fired);
       },
+      'should not emit an event when gamepad button state changes when event is off.': () => {
+        var gp = new Gamepad();
+        var pad = global.navigator.getGamepads()[0];
+        var fired = false;
+        const cb =  () => fired = true;
+
+        gp.on('down', cb, this);
+        gp.off('down', cb, this);
+        gp.update();
+        pad.buttons[0].value = 1;
+        gp.update();
+
+        assert.isFalse(fired);
+      },
+
+      'should emit an a mapped event when gamepad button state changes.': () => {
+        var gp = new Gamepad();
+        var pad = global.navigator.getGamepads()[0];
+        var fired = false;
+
+        gp.on('down:r2', () => fired = true, this);
+        gp.update();
+        pad.buttons[7].value = 1;
+        gp.update();
+
+        assert.isTrue(fired);
+      },
+      'should not emit an a mapped event when gamepad button state changes when off.': () => {
+        var gp = new Gamepad();
+        var pad = global.navigator.getGamepads()[0];
+        var fired = false;
+
+        const cb =  () => fired = true;
+
+        gp.on('down:r2', cb, this);
+        gp.off('down:r2', cb, this);
+        gp.update();
+        pad.buttons[7].value = 1;
+        gp.update();
+
+        assert.isTrue(fired);
+      },
+
+
       'should emit more specific event when button state changes': () => {
         var gp = new Gamepad();
         var pad = global.navigator.getGamepads()[0];
@@ -64,6 +108,19 @@ module.exports = {
         gp.update();
 
         assert.isTrue(fired);
+      },
+      'should not emit a more specific event when axis state changes and event is off': () => {
+        var gp = new Gamepad();
+        var pad = global.navigator.getGamepads()[0];
+        var fired = false;
+        const cb = () => fired = true;
+        gp.on('down:axis_0', cb, this);
+        gp.off('down:axis_0', cb, this);
+        gp.update();
+        pad.axes[0] = 1;
+        gp.update();
+
+        assert.isFalse(fired);
       },
     },
     hold: {

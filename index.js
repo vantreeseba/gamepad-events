@@ -460,8 +460,17 @@ class GamePadManager extends EventEmitter {
    * @param {object} context The context to be used as 'this' in the listener.
    * @returns {EventEmitter}
    */
-  on(...rest) {
-    return super.on(...rest);
+  on(event, ...rest) {
+    if(event.includes(':')){
+      let [type, id] = event.split(':');
+      if(this.mappings[id]){
+        const mapping = this.mappings[id];
+        id = mapping.type + '_' + mapping.index;
+      }
+
+      return super.on(type + ':' + id, ...rest);
+    }
+    return super.on(event, ...rest);
   }
 
   /**
@@ -471,8 +480,19 @@ class GamePadManager extends EventEmitter {
    * @param {function} listener The name of the event.
    * @returns {EventEmitter}
    */
-  off(...rest) {
-    return super.off(...rest);
+  off(event, ...rest) {
+    if(event.includes(':')){
+      const type = event.split(':')[0];
+      let id = event.split(':')[1];
+      if(this.mappings[id]){
+        const mapping = this.mappings[id];
+        id = mapping.type + '_' + mapping.value;
+      }
+
+      return super.off(type + ':' + id, ...rest);
+    }
+
+    return super.off(event, ...rest);
   }
 
 }

@@ -2,7 +2,14 @@ let gamepads = [{
   index: 0,
   buttons: [
     {value: 0},
-    {value: 0}
+    {value: 0},
+    {value: 0},
+    {value: 0},
+    {value: 0},
+    {value: 0},
+    {value: 0},
+    {value: 0},
+    {value: 0},
   ],
   axes: [0],
   connected: true,
@@ -19,6 +26,18 @@ module.exports = {
     gamepads = [{
       index: 0,
       buttons: [
+        {value: 0},
+        {value: 0},
+        {value: 0},
+        {value: 0},
+        {value: 0},
+        {value: 0},
+        {value: 0},
+        {value: 0},
+        {value: 0},
+        {value: 0},
+        {value: 0},
+        {value: 0},
         {value: 0},
         {value: 0}
       ],
