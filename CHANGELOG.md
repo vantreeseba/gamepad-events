@@ -1,5 +1,12 @@
+## 0.4.0 (2019-01-18)
+
+* Add mapped events ([03cfd1b](https://github.com/vantreeseba/gamepad-events/commit/03cfd1b))
+
+
+
 ## 0.3.0 (2019-01-17)
 
+* 0.3.0 ([c2fbb2b](https://github.com/vantreeseba/gamepad-events/commit/c2fbb2b))
 * Cleanup github stuff, fix issue with buttondown ([153bbe4](https://github.com/vantreeseba/gamepad-events/commit/153bbe4))
 
 
