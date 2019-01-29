@@ -1,5 +1,12 @@
+## 0.5.0 (2019-01-29)
+
+* Make update check for new gamepads connected after init ([7175349](https://github.com/vantreeseba/gamepad-events/commit/7175349))
+
+
+
 ## 0.4.0 (2019-01-18)
 
+* 0.4.0 ([e2eae4a](https://github.com/vantreeseba/gamepad-events/commit/e2eae4a))
 * Add mapped events ([03cfd1b](https://github.com/vantreeseba/gamepad-events/commit/03cfd1b))
 
 
