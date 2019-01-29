@@ -345,7 +345,13 @@ class GamePadManager extends EventEmitter {
     for (let player = 0; player < 4; player += 1) {
       const controller = controllers[player];
 
-      if (!controller || !controller.connected || !this.states[player]) {
+      if (!controller || !controller.connected) {
+        continue;
+      }
+
+      // Handle new connected gamepad.
+      if(!this.states[player]) {
+        this._setState(controller);
         continue;
       }
 
