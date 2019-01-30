@@ -13,7 +13,9 @@ A helper to manage gamepad inputs.
     * [.isDown(target, player)](#GamePadManager+isDown) ⇒ <code>Boolean</code>
     * [.getStick(target, player)](#GamePadManager+getStick) ⇒ <code>Object</code>
     * [.on(event, listener, context)](#GamePadManager+on) ⇒ <code>EventEmitter</code>
+    * [.once(event, listener, context)](#GamePadManager+once) ⇒ <code>EventEmitter</code>
     * [.off(event, listener)](#GamePadManager+off) ⇒ <code>EventEmitter</code>
+    * [.removeAllListeners(event)](#GamePadManager+removeAllListeners) ⇒ <code>EventEmitter</code>
 
 <a name="new_GamePadManager_new"></a>
 
@@ -77,6 +79,20 @@ These are namespaced as well, so you can do down:axis_0 to get the specific axis
 | listener | <code>function</code> | The name of the event. |
 | context | <code>object</code> | The context to be used as 'this' in the listener. |
 
+<a name="GamePadManager+once"></a>
+
+### gamePadManager.once(event, listener, context) ⇒ <code>EventEmitter</code>
+Add an event listener.
+These are namespaced as well, so you can do down:axis_0 to get the specific axis event.
+
+**Kind**: instance method of [<code>GamePadManager</code>](#GamePadManager)  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| event | <code>string</code> | The name of the event. |
+| listener | <code>function</code> | The name of the event. |
+| context | <code>object</code> | The context to be used as 'this' in the listener. |
+
 <a name="GamePadManager+off"></a>
 
 ### gamePadManager.off(event, listener) ⇒ <code>EventEmitter</code>
@@ -89,4 +105,16 @@ These are namespaced as well, so you can do down:axis_0 to get the specific axis
 | --- | --- | --- |
 | event | <code>string</code> | The name of the event. |
 | listener | <code>function</code> | The name of the event. |
+
+<a name="GamePadManager+removeAllListeners"></a>
+
+### gamePadManager.removeAllListeners(event) ⇒ <code>EventEmitter</code>
+Remove all listeners from an event.
+These are namespaced as well, so you can do down:axis_0 to get the specific axis event.
+
+**Kind**: instance method of [<code>GamePadManager</code>](#GamePadManager)  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| event | <code>string</code> | The name of the event. |
 

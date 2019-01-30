@@ -1,5 +1,12 @@
+## 0.6.0 (2019-01-30)
+
+* Add more event functions, cleanup, tests. ([a3d4921](https://github.com/vantreeseba/gamepad-events/commit/a3d4921))
+
+
+
 ## 0.5.0 (2019-01-29)
 
+* 0.5.0 ([0fe1837](https://github.com/vantreeseba/gamepad-events/commit/0fe1837))
 * Make update check for new gamepads connected after init ([7175349](https://github.com/vantreeseba/gamepad-events/commit/7175349))
 
 
