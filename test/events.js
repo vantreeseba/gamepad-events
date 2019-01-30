@@ -53,12 +53,12 @@ module.exports = {
 
         assert.isTrue(fired);
       },
-      'should not emit an a mapped event when gamepad button state changes when off.': () => {
+      'should not emit a mapped event when gamepad button state changes when listener removed.': () => {
         var gp = new Gamepad();
         var pad = global.navigator.getGamepads()[0];
         var fired = false;
 
-        const cb =  () => fired = true;
+        const cb = () => fired = true;
 
         gp.on('down:r2', cb, this);
         gp.off('down:r2', cb, this);
@@ -66,9 +66,8 @@ module.exports = {
         pad.buttons[7].value = 1;
         gp.update();
 
-        assert.isTrue(fired);
+        assert.isFalse(fired);
       },
-
 
       'should emit more specific event when button state changes': () => {
         var gp = new Gamepad();
@@ -122,6 +121,43 @@ module.exports = {
 
         assert.isFalse(fired);
       },
+
+      'should not emit any events when all listeners are removed': () => {
+        var gp = new Gamepad();
+        var pad = global.navigator.getGamepads()[0];
+        var fired1 = false;
+        var fired2 = false;
+
+
+        gp.on('down:axis_0', () => fired1 = true, this);
+        gp.on('down:axis_0', () => fired2 = true, this);
+        gp.removeAllListeners('down:axis_0');
+
+        gp.update();
+        pad.axes[0] = 1;
+        gp.update();
+
+        assert.isFalse(fired1);
+        assert.isFalse(fired2);
+      },
+
+      'should emit event only once when set as once': () => {
+        var gp = new Gamepad();
+        var pad = global.navigator.getGamepads()[0];
+        var firedCount = 0;
+
+        gp.once('down:axis_0', () => firedCount++, this);
+        gp.update();
+        pad.axes[0] = 1;
+        gp.update();
+        pad.axes[0] = 1;
+        gp.update();
+        pad.axes[0] = 1;
+        gp.update();
+
+        assert.equal(firedCount, 1);
+      }
+
     },
     hold: {
       'should be fired when button is held': (done) => {

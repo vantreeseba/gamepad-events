@@ -459,6 +459,27 @@ class GamePadManager extends EventEmitter {
   }
 
   /**
+   * Maps an event name to the internal name.
+   * I.e. down:ps4_circle to down:button_1
+   *
+   * @private
+   * @param {String} event The event name to map.
+   * @return {String} The mapped event name.
+   */
+  _getMappedEventName(event) {
+    if(event.includes(':')){
+      let [type, id] = event.split(':');
+      if(this.mappings[id]){
+        const mapping = this.mappings[id];
+        id = mapping.type + '_' + mapping.index;
+      }
+
+      return `${type}:${id}`;
+    }
+    return event;
+  }
+
+  /**
    * Add an event listener.
    * These are namespaced as well, so you can do down:axis_0 to get the specific axis event.
    * @param {string} event The name of the event.
@@ -467,16 +488,19 @@ class GamePadManager extends EventEmitter {
    * @returns {EventEmitter}
    */
   on(event, ...rest) {
-    if(event.includes(':')){
-      let [type, id] = event.split(':');
-      if(this.mappings[id]){
-        const mapping = this.mappings[id];
-        id = mapping.type + '_' + mapping.index;
-      }
+    return super.on(this._getMappedEventName(event), ...rest);
+  }
 
-      return super.on(type + ':' + id, ...rest);
-    }
-    return super.on(event, ...rest);
+  /**
+   * Add an event listener.
+   * These are namespaced as well, so you can do down:axis_0 to get the specific axis event.
+   * @param {string} event The name of the event.
+   * @param {function} listener The name of the event.
+   * @param {object} context The context to be used as 'this' in the listener.
+   * @returns {EventEmitter}
+   */
+  once(event, ...rest) {
+    return super.once(this._getMappedEventName(event), ...rest);
   }
 
   /**
@@ -487,18 +511,17 @@ class GamePadManager extends EventEmitter {
    * @returns {EventEmitter}
    */
   off(event, ...rest) {
-    if(event.includes(':')){
-      const type = event.split(':')[0];
-      let id = event.split(':')[1];
-      if(this.mappings[id]){
-        const mapping = this.mappings[id];
-        id = mapping.type + '_' + mapping.value;
-      }
+    return super.off(this._getMappedEventName(event), ...rest);
+  }
 
-      return super.off(type + ':' + id, ...rest);
-    }
-
-    return super.off(event, ...rest);
+  /**
+   * Remove all listeners from an event.
+   * These are namespaced as well, so you can do down:axis_0 to get the specific axis event.
+   * @param {string} event The name of the event.
+   * @returns {EventEmitter}
+   */
+  removeAllListeners(event) {
+    return super.removeAllListeners(this._getMappedEventName(event));
   }
 
 }

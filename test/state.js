@@ -13,6 +13,24 @@ module.exports = {
 
       assert.isOk(gp);
     },
+    'gamepad detection': {
+      'should handle gamepad connecting after update': () => {
+        var gp = new Gamepad();
+        var pad = global.navigator.getGamepads()[0];
+
+        gp.update();
+
+        assert.isOk(gp.states[0]);
+        assert.isNotOk(gp.states[1]);
+
+        global.navigator.connectGamepad();
+
+        gp.update();
+
+        assert.isOk(gp.states[0]);
+        assert.isOk(gp.states[1]);
+      }
+    },
     isDown: {
       'should return true when gamepad button state is down is down': () => {
         var gp = new Gamepad();

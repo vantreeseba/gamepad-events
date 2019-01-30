@@ -18,6 +18,14 @@ let gamepads = [{
 global.navigator = {
   getGamepads(){
     return gamepads;
+  },
+  connectGamepad() {
+    gamepads.push({
+      index: 1,
+      buttons: [],
+      axes: [0],
+      connected: true
+    });
   }
 };
 
