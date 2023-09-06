@@ -1,22 +1,24 @@
-let gamepads = [{
-  index: 0,
-  buttons: [
-    {value: 0},
-    {value: 0},
-    {value: 0},
-    {value: 0},
-    {value: 0},
-    {value: 0},
-    {value: 0},
-    {value: 0},
-    {value: 0},
-  ],
-  axes: [0],
-  connected: true,
-}];
+let gamepads = [
+  {
+    index: 0,
+    buttons: [
+      { value: 0 },
+      { value: 0 },
+      { value: 0 },
+      { value: 0 },
+      { value: 0 },
+      { value: 0 },
+      { value: 0 },
+      { value: 0 },
+      { value: 0 },
+    ],
+    axes: [0],
+    connected: true,
+  },
+];
 
 global.navigator = {
-  getGamepads(){
+  getGamepads() {
     return gamepads;
   },
   connectGamepad() {
@@ -24,33 +26,33 @@ global.navigator = {
       index: 1,
       buttons: [],
       axes: [0],
-      connected: true
+      connected: true,
     });
-  }
+  },
 };
 
-module.exports = {
-  resetMocks() {
-    gamepads = [{
+export function resetMocks() {
+  gamepads = [
+    {
       index: 0,
       buttons: [
-        {value: 0},
-        {value: 0},
-        {value: 0},
-        {value: 0},
-        {value: 0},
-        {value: 0},
-        {value: 0},
-        {value: 0},
-        {value: 0},
-        {value: 0},
-        {value: 0},
-        {value: 0},
-        {value: 0},
-        {value: 0}
+        { value: 0 },
+        { value: 0 },
+        { value: 0 },
+        { value: 0 },
+        { value: 0 },
+        { value: 0 },
+        { value: 0 },
+        { value: 0 },
+        { value: 0 },
+        { value: 0 },
+        { value: 0 },
+        { value: 0 },
+        { value: 0 },
+        { value: 0 },
       ],
       axes: [0],
       connected: true,
-    }];
-  }
-};
+    },
+  ];
+}
