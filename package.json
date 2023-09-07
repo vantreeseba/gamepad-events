@@ -7,11 +7,9 @@
   "main": "src/GamePadManager.js",
   "type": "module",
   "scripts": {
-    "test": "vitest",
+    "test": "node --test",
+    "dev:test": "node --test --watch test",
     "build-readme": "jsdoc2md -t README.hbs -f *.js > README.md",
     "build-changelog": "conventional-changelog -i CHANGELOG.md -s -r 0"
-  },
-  "devDependencies": {
-    "vitest": "^0.34.3"
   }
 }
